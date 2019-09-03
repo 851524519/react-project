@@ -1,3 +1,5 @@
+// 这个文件是 react-loadable的原理
+
 import React, { Component } from 'react'
 
 const Loadable = ({
@@ -8,11 +10,26 @@ const Loadable = ({
         state = {
             LoadedComponent: null
         }
+
+        componentDidMount() {
+            loader()
+                .then(resp => {
+                    this.setState({
+                        LoadedComponent: resp.default
+                    })
+                })
+        }
         render() {
+            const {
+                LoadedComponent
+            } = this.state
             return (
-                <div>
-                    <Loading />
-                </div>
+                LoadedComponent
+                ?
+                <LoadedComponent />
+                :
+                 <Loading />
+               
             )
         }
     }

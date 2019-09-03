@@ -1,6 +1,8 @@
-// import Loadable from 'react-loadable'
+import Loadable from 'react-loadable'
 import { Loading } from '../components'
-import Loadable from './loadable'
+
+// 下面注释的这个文件是 react-loadable 简单的原理实现
+// import Loadable from './loadable'
 
 // import Dashboard from './Dashboard'
 // import Login from './Login'
