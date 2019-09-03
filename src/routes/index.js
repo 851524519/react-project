@@ -22,13 +22,13 @@ export const adminRouter = [{
     pathname: '/admin/dashboard',
     component: Dashboard
 }, {
-    pathname: 'admin/settings',
+    pathname: '/admin/settings',
     component: Settings
 }, {
-    pathname: 'admin/article',
+    pathname: '/admin/article',
     component: ArticleList,
     exact: true
 }, {
-    pathname: 'admin/article/edit/:id',
+    pathname: '/admin/article/edit/:id',
     component: ArticleEdit
 }]
