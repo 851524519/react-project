@@ -6,7 +6,6 @@ import { HashRouter as Router, Route, Switch, Redirect } from 'react-router-dom'
 import { mainRoutes } from './routes'
 
 import './index.less'
-import { from } from 'rxjs';
 
 render (
     <Router>

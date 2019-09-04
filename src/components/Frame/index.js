@@ -1,15 +1,20 @@
 import React, { Component } from 'react'
-import { Layout, Menu, Breadcrumb, Icon } from 'antd';
+import { Layout, Menu, Icon } from 'antd';
 import logo from './logo.png'
 import './frame.less'
+import { withRouter } from 'react-router-dom'
 
 const { Header, Content, Sider } = Layout;
 
-export default class Frame extends Component {
+@withRouter
+class Frame extends Component {
+    onMenuClick = ({ key }) => {
+        this.props.history.push(key)
+    }
     render() {
         console.log(this.props)
         return (
-            <Layout>
+            <Layout style={{minHeight: '100%'}}>
                 <Header className="header fq-header">
                     <div className="fq-logo" >
                         <img src={logo} alt="FQADMIN"/>
@@ -18,26 +23,24 @@ export default class Frame extends Component {
                 <Layout>
                     <Sider width={200} style={{ background: '#fff' }}>
                         <Menu
-                        mode="inline"
-                        defaultSelectedKeys={['1']}
-                        defaultOpenKeys={['sub1']}
-                        style={{ height: '100%', borderRight: 0 }}
-                        >
+                            mode="inline"
+                            selectedKeys={[this.props.location.pathname]}
+                            onClick={this.onMenuClick}
+                            style={{ height: '100%', borderRight: 0 }}
+                            >
                             {
                                 this.props.menus.map(item => {
                                     return (
-                                        <Menu.Item key={item.pathname}>{item.title}</Menu.Item>
+                                        <Menu.Item key={item.pathname}>
+                                            <Icon type={item.icon} />
+                                            {item.title}
+                                        </Menu.Item>
                                     )
                                 })
                             }
                         </Menu>
                     </Sider>
-                    <Layout style={{ padding: '0 24px 24px' }}>
-                        <Breadcrumb style={{ margin: '16px 0' }}>
-                        <Breadcrumb.Item>Home</Breadcrumb.Item>
-                        <Breadcrumb.Item>List</Breadcrumb.Item>
-                        <Breadcrumb.Item>App</Breadcrumb.Item>
-                        </Breadcrumb>
+                    <Layout style={{ padding: '16px' }}>
                         <Content
                         style={{
                             background: '#fff',
@@ -54,3 +57,5 @@ export default class Frame extends Component {
         )
     }
 }
+
+export default Frame

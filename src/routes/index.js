@@ -22,11 +22,13 @@ export const adminRoutes = [{
     pathname: '/admin/dashboard',
     component: Dashboard,
     title: '仪表盘',
+    icon: 'dashboard',
     isNav: true
 }, {
     pathname: '/admin/article',
     component: ArticleList,
     title: '文章管理',
+    icon: 'unordered-list',
     isNav: true,
     exact: true
 }, {
@@ -36,5 +38,6 @@ export const adminRoutes = [{
     pathname: '/admin/settings',
     component: Settings,
     title: '设置',
+    icon: 'setting',
     isNav: true
 }]
