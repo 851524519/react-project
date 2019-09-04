@@ -12,7 +12,6 @@ class Frame extends Component {
         this.props.history.push(key)
     }
     render() {
-        console.log(this.props)
         return (
             <Layout style={{minHeight: '100%'}}>
                 <Header className="header fq-header">
@@ -44,9 +43,7 @@ class Frame extends Component {
                         <Content
                         style={{
                             background: '#fff',
-                            padding: 24,
                             margin: 0,
-                            minHeight: 280,
                         }}
                         >
                         {this.props.children}
