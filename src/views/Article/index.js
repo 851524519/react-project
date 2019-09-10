@@ -19,7 +19,10 @@ export default class ArticleList extends Component {
     this.state = {
       dataSource: [],
       columns: [],
-      total: 0
+      total: 0,
+      isLoading: false,
+      offset: 0,
+      limited: 10
     }
   }
 
@@ -67,15 +70,44 @@ export default class ArticleList extends Component {
   }
 
   getDate = () => {
-    getArticles()
+    this.setState({
+      isLoading: true
+    })
+    getArticles(this.state.offset, this.state.limited)
         .then(resp => {
           const columnKeys = Object.keys(resp.list[0])
           const columns = this.createColumns(columnKeys)
             this.setState({
               total: resp.total,
               columns,
-              dataSource: resp.list
+              dataSource: resp.list,
             })
+        })
+        .catch(err => {
+          // 错误处理
+        })
+        .finally(() => {
+          this.setState({
+            isLoading: false
+          })
+        })
+  }
+
+  onPageChange = (page, pageSize) => {
+    this.setState({
+      offset: pageSize * (page - 1),
+      limited: pageSize
+    }, () => {
+      this.getDate()
+    })
+  }
+
+  ononShowSizeChange = (current, size) => {
+    this.setState({
+      offset: 0,
+      limited: size
+    }, () => {
+      this.getDate()
     })
   }
 
@@ -91,11 +123,18 @@ export default class ArticleList extends Component {
             >
                <Table 
                 rowKey={record => record.id}
+                loading={this.state.isLoading}
                 dataSource={this.state.dataSource} 
                 columns={this.state.columns}
                 pagination={{
+                  current: this.state.offset / this.state.limited + 1,
                   total: this.state.total,
-                  hideOnSinglePage: true
+                  hideOnSinglePage: true,
+                  onChange: this.onPageChange,
+                  showQuickJumper: true,
+                  showSizeChanger: true,
+                  onShowSizeChange: this.ononShowSizeChange,
+                  pageSizeOptions: ['10', '15', '20', '30']
                 }}
                />
             </Card>
