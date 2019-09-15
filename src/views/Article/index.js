@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import moment from 'moment'
-import { Card, Button, Table, Tag } from 'antd'
-import { getArticles } from '../../requests'
+import { Card, Button, Table, Tag, Modal, Typography, message } from 'antd'
+import { getArticles, deleteArticleById } from '../../requests'
 import XLSX from 'xlsx'
 
 const ButtonGroup = Button.Group
@@ -23,7 +23,11 @@ export default class ArticleList extends Component {
       total: 0,
       isLoading: false,
       offset: 0,
-      limited: 10
+      limited: 10,
+      deleteArticleTitle: '',
+      isShowArticleModal: false,
+      deleteAtricleConfirmLoading: false,
+      deleteArticleID: null
     }
   }
 
@@ -58,16 +62,69 @@ export default class ArticleList extends Component {
     columns.push({
       title: '操作',
       key: 'action',
-      render: () => {
+      render: (record) => {
         return (
           <ButtonGroup>
             <Button size='small' type="primary">编辑</Button>
-            <Button size='small' type="danger">删除</Button>
+            <Button size='small' type="danger" onClick={this.showDeleteArticleModal.bind(this, record)}>删除</Button>
           </ButtonGroup>
         )
       }
     })
     return columns
+  }
+
+  showDeleteArticleModal = (record) => {
+    // 使用函数的方式调用，定制化没有那么强
+
+    // Modal.confirm({
+    //   content: <Typography>确定要删除<span style={{color: '#f00'}}>{record.title}</span>吗？</Typography>,
+    //   title: '此操作不可逆，请谨慎！！！',
+    //   okText: '快点，别墨迹！！！',
+    //   cancelText: '考虑一下',
+    //   onOk() {
+    //     deleteArticle(record.id)
+    //       .then(resp => {
+    //         console.log(resp)
+    //       })
+    //   }
+    // })
+    this.setState({
+      isShowArticleModal: true,
+      deleteArticleTitle: record.title,
+      deleteArticleID: record.id
+    })
+  }
+
+  deleteArticle = () => {
+    this.setState({
+      deleteAtricleConfirmLoading: true
+    })
+    deleteArticleById(this.state.deleteArticleID)
+      .then(resp => {
+        message.success(resp.msg)
+        // 这里的需求是删除完成之后调到第一页
+        this.setState({
+          offset: 0
+        }, () => {
+          this.getDate()
+        })
+       
+      })
+      .finally(() => {
+        this.setState({
+          deleteAtricleConfirmLoading: false,
+          isShowArticleModal: false
+        })
+      })
+  }
+
+  hideDeleteModal = () => {
+    this.setState({
+      isShowArticleModal: false,
+      deleteArticleTitle: '',
+      deleteAtricleConfirmLoading: false
+    })
   }
 
   getDate = () => {
@@ -161,6 +218,20 @@ export default class ArticleList extends Component {
                   pageSizeOptions: ['10', '15', '20', '30']
                 }}
                />
+               <Modal
+                  title= '此操作不可逆，请谨慎！！！'
+                  visible={this.state.isShowArticleModal}
+                  onCancel={this.hideDeleteModal}
+                  maskClosable={false}
+                  confirmLoading={this.state.deleteAtricleConfirmLoading}
+                  onOk={this.deleteArticle}
+               >
+                 <Typography>
+                   确定要删除
+                   <span style={{color: '#f00'}}>{this.state.deleteArticleTitle}</span>
+                   吗？
+                 </Typography>
+               </Modal>
             </Card>
         )
     }
