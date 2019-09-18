@@ -41,3 +41,8 @@ export const deleteArticleById = (id) => {
 export const getArticleById = (id) => {
     return service.post(`/api/v1/article/${id}`)
 }
+
+// 保存文章
+export const saveArticle = (id, data) => {
+    return service.post(`/api/v1/articleEdit/${id}`, data)
+}
