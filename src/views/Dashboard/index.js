@@ -22,8 +22,6 @@ export default class Dashboard extends Component {
         this.articleChart = echarts.init(this.articelAmount.current)
         getArticleAmount()
             .then(resp => {
-                console.log(resp)
-                console.log(Object.values(resp.amount))
                  // 指定图表的配置项和数据
                 var option = {
                     xAxis: {
