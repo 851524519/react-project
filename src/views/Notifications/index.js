@@ -1,46 +1,66 @@
 import React, { Component } from 'react'
 
-import { Card, Button, List, Avatar, Badge } from 'antd'
+import { Card, Button, List, Avatar, Badge, Spin } from 'antd'
 
-const data = [
-    {
-      title: 'Ant Design Title 1',
-    },
-    {
-      title: 'Ant Design Title 2',
-    },
-    {
-      title: 'Ant Design Title 3',
-    },
-    {
-      title: 'Ant Design Title 4',
-    },
-  ];
+import { connect } from 'react-redux'
 
-export default class Notifications extends Component {
+import { markNotificationAsReadById, markAllNotificationsAsRead } from '../../actions/notifications'
+
+  const mapState = state => {
+    const {
+      list,
+      isLoading
+    } = state.notifications
+    return {
+      list,
+      isLoading
+    }
+  }
+
+@connect(mapState, { markNotificationAsReadById, markAllNotificationsAsRead })
+class Notifications extends Component {
     render() {
         return (
-           <Card
-            title="通知中心"
-            bordered={false}
-            extra={ <Button>全部标记为已读</Button> }
-           >
-               <List
-                    itemLayout="horizontal"
-                    dataSource={data}
-                    renderItem={item => (
-                    <List.Item
-                        extra={ <Button>标记为已读</Button> }
-                    >
-                        <List.Item.Meta
-                            avatar={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />}
-                            title={<Badge dot>{item.title}</Badge>}
-                            description="Ant Design, a design language for background applications, is refined by Ant UED Team"
-                        />
-                    </List.Item>
-                    )}
-                />
-           </Card>
+           <Spin spinning={this.props.isLoading}>
+            <Card
+              title="通知中心"
+              bordered={false}
+              extra={
+                <Button
+                  disabled={this.props.list.every(item => item.hasRead === true)}
+                  onClick={this.props.markAllNotificationsAsRead}
+                >
+                  全部标记为已读
+                </Button> }
+            >
+                <List
+                      itemLayout="horizontal"
+                      dataSource={this.props.list}
+                      renderItem={item => (
+                      <List.Item
+                          extra={ 
+                            item.hasRead 
+                            ? 
+                            null 
+                            : 
+                            <Button
+                              onClick={this.props.markNotificationAsReadById.bind(this, item.id)}
+                            >
+                              标记为已读
+                            </Button> }
+                      >
+                          <List.Item.Meta
+                              avatar={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />}
+                              title={<Badge dot={!item.hasRead}>{item.title}</Badge>}
+                              description={item.desc}
+                          />
+                      </List.Item>
+                      )}
+                  />
+            </Card>
+           </Spin>
         )
     }
 }
+
+export default Notifications
