@@ -14,16 +14,12 @@ import { Provider } from 'react-redux'
 import { mainRoutes } from './routes'
 
 import './index.less'
-
 render (
     <Provider store={store}>
         <ConfigProvider locale={zhCN}>
             <Router>
                 <Switch>
-                    <Route path="/admin" render={(routerProps) => {
-                        // TODO: 权限，需要登陆才能够访问 /admin
-                        return <App {...routerProps}/>
-                    }} />
+                    <Route path="/admin" component={App} />
                     {
                         mainRoutes.map(route => {
                             return <Route key={route.pathname} path={route.pathname} component={route.component} />

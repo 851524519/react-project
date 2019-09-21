@@ -6,6 +6,10 @@ const service = axios.create({
     baseURL: isDev ? 'http://rap2api.taobao.org/app/mock/230215' : ''
 })
 
+const service1 = axios.create({
+    baseURL: isDev ? 'http://rap2api.taobao.org/app/mock/230215' : ''
+})
+
 // 拦截器
 service.interceptors.request.use((config) => {
     config.data = Object.assign({}, config.data, {
@@ -55,4 +59,9 @@ export const getArticleAmount = () => {
 // 获取通知列表
 export const getNotifications = () => {
     return service.post('/api/v1/notifications')
+}
+
+// 登陆接口
+export const loginRequest = (userInfo) => {
+    return service1.post('/api/v2/login', userInfo)
 }
