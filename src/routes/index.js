@@ -6,7 +6,8 @@ import {
     ArticleList,
     ArticleEdit,
     Notifications,
-    Noauth
+    Noauth,
+    Profile
 } from '../views'
 
 
@@ -46,6 +47,10 @@ export const adminRoutes = [{
 }, {
     pathname: '/admin/noauth',
     component: Noauth,
+    role: ['001', '002', '003']
+}, {
+    pathname: '/admin/profile',
+    component: Profile,
     role: ['001', '002', '003']
 }, {
     pathname: '/admin/settings',

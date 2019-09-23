@@ -47,7 +47,7 @@ class Frame extends Component {
                 </Badge>
             </Menu.Item> 
             <Menu.Item
-                key='/admin/settings'
+                key='/admin/profile'
             >
                 个人设置
             </Menu.Item>
